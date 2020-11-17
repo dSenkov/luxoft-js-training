@@ -25,38 +25,6 @@ export function findById(id) {
     }
 }
 
-function getAge(id) {
-    const employee = findById(id)
-    let ageDiff = Date.now() - employee.dateOfBirth.getTime()
-    let ageDate = new Date(ageDiff)
-    return Math.abs(ageDate.getUTCFullYear() - 1970)
-}
-
-function formatDate(date) {
-    let day = date.getDate()
-    if (day < 10) day = '0' + day
-    let month = date.getMonth() + 1
-    if (month < 10) month = '0' + month
-    let year = date.getFullYear()
-    return day + '.' + month + '.' + year
-}
-
-function getEmployeeInfo(id) {
-    const e = findById(id)
-
-    const phones = e.phones ?
-        `List of phones: ${e.phones}` : ''
-    const age = e.dateOfBirth ?
-        `Age: ${getAge(e.id)}` : ''
-    return `
-    Name: ${e.name}
-    Surname: ${e.surname}
-    Date of birth: ${formatDate(e.dateOfBirth)}
-    ${phones}
-    ${age}
-    `
-}
-
 function getEmployeeJSON(id) {
     const e = findById(id)
     return JSON.stringify(e)

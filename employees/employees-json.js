@@ -4,25 +4,29 @@ export default {
             id: 1,
             name: 'Peter',
             surname: 'Peterson',
-            department: 'IT'
+            department: 'IT',
+            dateOfBirth: "2000-01-01"
         },
         {
             id: 2,
             name: 'Steve',
             surname: 'Jobs',
-            department: 'Hardware'
+            department: 'Hardware',
+            dateOfBirth: "2000-01-01"
         },
         {
             id: 3,
             name: 'Jeff',
             surname: 'Bezos',
-            department: 'Sales'
+            department: 'Sales',
+            dateOfBirth: "2000-01-01"
         },
         {
             id: 4,
             name: 'Bill',
             surname: 'Gates',
-            department: 'Finances'
+            department: 'Finances',
+            dateOfBirth: "2000-01-01"
         }
     ]
 }

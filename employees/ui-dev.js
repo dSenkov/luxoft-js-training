@@ -4,6 +4,6 @@ import DATA from './employees-json'
 
 export function runUI() {
     ui.runUI()
-    console.log(DATA)
+    console.dir(DATA)
     document.body.style.backgroundColor = '#EFE'
 }

@@ -1,5 +1,6 @@
- import { removeEmployee, addEmployee, searchEmployees, setEmployeeManager } from "./service"
- import {DATA} from "./employees-json";
+import {removeEmployee, addEmployee, searchEmployees, setEmployeeManager} from "./service"
+import DATA from "./employees-json";
+import {Employee, jsonToEmployees} from "./model/Employee";
 
 const PLACEHOLDER = 'employeesPlaceholder'
 
@@ -11,10 +12,10 @@ function showEmployees(employees) {
     clearEmployeesPlaceholder()
     const ul = document.createElement('ul')
 
-    for (let employee of employees) {
+    for (let employee of jsonToEmployees(employees)) {
         const li = document.createElement('li')
         ul.appendChild(li)
-        li.innerHTML = employee.name + ' ' + employee.surname
+        li.innerHTML = employee
         if (employee.managerRef) {
             const managerSpan = document.createElement('span')
             const managerSelect = document.createElement('select')
@@ -112,12 +113,12 @@ export function openTab(event, id) {
     var i, tabcontent, tablinks
 
     tabcontent = document.getElementsByClassName('tabcontent')
-    for (i = 0; i< tabcontent.length; i++) {
-        tabcontent[i].style.display='none'
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = 'none'
     }
 
     tablinks = document.getElementsByClassName('tablinks')
-    for (i = 0; i<tablinks.length; i++) {
+    for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(' active', '')
     }
 
