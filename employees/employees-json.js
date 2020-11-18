@@ -5,6 +5,7 @@ export default {
             name: 'Peter',
             surname: 'Peterson',
             department: 'IT',
+            salary: 4000,
             dateOfBirth: "2000-01-01"
         },
         {
@@ -12,6 +13,7 @@ export default {
             name: 'Steve',
             surname: 'Jobs',
             department: 'Hardware',
+            salary: 2000,
             dateOfBirth: "2000-01-01"
         },
         {
@@ -19,6 +21,7 @@ export default {
             name: 'Jeff',
             surname: 'Bezos',
             department: 'Sales',
+            salary: 3000,
             dateOfBirth: "2000-01-01"
         },
         {
@@ -26,6 +29,7 @@ export default {
             name: 'Bill',
             surname: 'Gates',
             department: 'Finances',
+            salary: 3000,
             dateOfBirth: "2000-01-01"
         }
     ]
