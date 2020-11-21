@@ -2,7 +2,7 @@ import DATA from './employees-json'
 
 function findByName(name, surname) {
     let res = []
-    for (var e of DATA.employees) {
+    for (let e of DATA.employees) {
         if ((!name || e.name === name) &&
             (!surname || e.surname === surname)) {
             res.push(e)
@@ -11,23 +11,12 @@ function findByName(name, surname) {
     return res
 }
 
-const employeeMap = {}
-
 export function findById(id) {
-    if (employeeMap[id]) {
-        return employeeMap[id]
-    }
-    for (var e of DATA.employees) {
-        if (id == e.id) {
-            employeeMap[id] = e
-            return e
-        }
-    }
+    return DATA.employees.find(employee => employee.id === id)
 }
 
 function getEmployeeJSON(id) {
-    const e = findById(id)
-    return JSON.stringify(e)
+    return JSON.stringify(findById(id))
 }
 
 function testEmployee() {
@@ -43,11 +32,9 @@ export function addEmployee(name, surname) {
         // throw new Error('name and surname should not be empty')
         return null
     }
-    let max = 0
-    for (let e of DATA.employees) {
-        if (e.id > max) max = e.id
-    }
-    let id = max + 1
+    let id = DATA.employees
+        .map(employee => employee.id)
+        .reduce((id1, id2) => id1 > id2 ? id1 : id2) + 1
     DATA.employees.push({id, name, surname})
     return id
 }
