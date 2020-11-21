@@ -192,4 +192,3 @@ console.log('Highest salary in IT department: ' + maxSalaryInDep('IT'))
 console.log('Department with highest average salary: ' + depWithMaxSalary())
 console.log('Employees it IT department:' + employeesInDep('IT'))
 console.log('Employees with salary more than 500:' + employeesWithSalaryMoreThan(500))
-
