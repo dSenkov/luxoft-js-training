@@ -10,6 +10,21 @@ export class Employee extends Person {
     static fromJSON(obj) {
         return Object.assign(new Employee(), obj)
     }
+
+    bonus() {
+        return new Promise(resolve => {
+            setTimeout(
+                () => resolve(Math.round(Math.random() * 1000)),
+                1000
+            )
+        })
+    }
+
+    total() {
+        return new Promise(resolve =>
+            this.bonus().then(bonus =>
+                resolve(bonus + this.salary)))
+    }
 }
 
 export function jsonToEmployees(employeesJSON) {
@@ -19,4 +34,3 @@ export function jsonToEmployees(employeesJSON) {
     }
     return employees
 }
-
