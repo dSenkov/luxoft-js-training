@@ -1,6 +1,6 @@
-import {removeEmployee, addEmployee, searchEmployees, setEmployeeManager} from "./service"
+import {addEmployee, removeEmployee, searchEmployees, setEmployeeManager} from "./service"
 import DATA from "./employees-json";
-import {Employee, jsonToEmployees} from "./model/Employee";
+import {jsonToEmployees} from "./model/Employee";
 
 const PLACEHOLDER = 'employeesPlaceholder'
 
@@ -8,31 +8,65 @@ function clearEmployeesPlaceholder() {
     document.getElementById(PLACEHOLDER).innerHTML = ''
 }
 
-function showEmployees(employees) {
-    clearEmployeesPlaceholder()
-    const ul = document.createElement('ul')
-
-    for (let employee of jsonToEmployees(employees)) {
-        const li = document.createElement('li')
-        ul.appendChild(li)
-        li.innerHTML = employee
-        if (employee.managerRef) {
-            const managerSpan = document.createElement('span')
-            const managerSelect = document.createElement('select')
-            fillSelect(managerSelect, getEmployeesOptions(), employee.managerRef)
-            managerSelect.addEventListener('change',
-                () => employee.managerRef = managerSelect.value)
-            managerSpan.innerHTML = ' <b>Manager:</b> '
-            li.appendChild(managerSpan)
-            li.appendChild(managerSelect)
-        }
-        const removeButton = document.createElement('button')
-        removeButton.innerHTML = 'Remove'
-        removeButton.addEventListener('click', () => removeEmployeeUI(employee.id))
-        li.appendChild(removeButton)
-    }
-    document.getElementById(PLACEHOLDER).appendChild(ul)
+function showEmployees(employeesJSON) {
+    let employees = jsonToEmployees(employeesJSON)
+    document.getElementById(PLACEHOLDER).innerHTML = showEmployeesView(DATA.employees, employees)
 }
+
+function showEmployeesView(allEmployees, employees) {
+    let li_items = employees.map(e =>
+        `<li>${e} 
+            <button onclick="removeEmployeeUI(${e.id})">X</button>
+            ${employeeManagerView(allEmployees, e.managerRef)}
+         </li>`)
+        .join('')
+    return `<ul>${li_items}</ul>`
+}
+
+export function employeeManagerView(employees, selectedId) {
+    if (!selectedId) return ''
+    let values = employees.map(e => {
+        return {
+            text: e.name + ' ' + e.surname,
+            value: e.id,
+            selected: e.id === selectedId
+        }
+    })
+    return `<span>${selectView(values)}</span>`
+}
+
+export function selectView(values) {
+    const values_html = values.map(v =>
+        `<option value="${v.value}"${v.selected ? ' selected' : ''}>${v.text}</option>`
+    ).join('')
+    return `<select>${values_html}</select>`
+}
+
+// function showEmployees(employees) {
+//     clearEmployeesPlaceholder()
+//     const ul = document.createElement('ul')
+//
+//     for (let employee of jsonToEmployees(employees)) {
+//         const li = document.createElement('li')
+//         ul.appendChild(li)
+//         li.innerHTML = employee
+//         if (employee.managerRef) {
+//             const managerSpan = document.createElement('span')
+//             const managerSelect = document.createElement('select')
+//             fillSelect(managerSelect, getEmployeesOptions(), employee.managerRef)
+//             managerSelect.addEventListener('change',
+//                 () => employee.managerRef = managerSelect.value)
+//             managerSpan.innerHTML = ' <b>Manager:</b> '
+//             li.appendChild(managerSpan)
+//             li.appendChild(managerSelect)
+//         }
+//         const removeButton = document.createElement('button')
+//         removeButton.innerHTML = 'Remove'
+//         removeButton.addEventListener('click', () => removeEmployeeUI(employee.id))
+//         li.appendChild(removeButton)
+//     }
+//     document.getElementById(PLACEHOLDER).appendChild(ul)
+// }
 
 export function runUI() {
     showEmployees(DATA.employees)
@@ -68,7 +102,7 @@ export function addEmployeeUI() {
     console.log('Error: ' + errorHTML)
     document.getElementById('addEmployeeFormErrorMessage').innerHTML = errorHTML
 
-    if (errorHTML.length != 0) return
+    if (errorHTML.length !== 0) return
 
     showEmployees(DATA.employees)
 
@@ -77,7 +111,7 @@ export function addEmployeeUI() {
     document.getElementById('dateOfBirth').value = ''
 }
 
-function removeEmployeeUI(id) {
+export function removeEmployeeUI(id) {
     removeEmployee(id)
     showEmployees(DATA.employees)
 }

@@ -1,4 +1,4 @@
-import {runUI, addEmployeeUI, openTab, searchEmployeeUI} from './employees/ui-all'
+import {runUI, addEmployeeUI, openTab, searchEmployeeUI, removeEmployeeUI} from './employees/ui-all'
 
 import DATA from './employees/employees-json'
 import {Person} from "./employees/model/Person";
@@ -7,6 +7,7 @@ import {Employee, jsonToEmployees} from './employees/model/Employee'
 import './style.css'
 
 window.addEmployeeUI = addEmployeeUI
+window.removeEmployeeUI = removeEmployeeUI
 window.openTab = openTab
 window.searchEmployeeUI = searchEmployeeUI
 
