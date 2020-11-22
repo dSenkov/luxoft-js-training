@@ -32,7 +32,7 @@ export function employeeManagerView(employees, selectedId) {
             selected: e.id === selectedId
         }
     })
-    return `<span>${selectView(values)}</span>`
+    return ` <b>Manager:</b> <span>${selectView(values)}</span>`
 }
 
 export function selectView(values) {

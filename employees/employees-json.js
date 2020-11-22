@@ -139,7 +139,8 @@ export default {
             surname: 'Peterson',
             department: 'IT',
             salary: 4000,
-            dateOfBirth: "2000-01-01"
+            dateOfBirth: "2000-01-01",
+            managerRef: 135
         },
         {
             id: 135,
@@ -147,7 +148,8 @@ export default {
             surname: 'Jobs',
             department: 'Hardware',
             salary: 2000,
-            dateOfBirth: "2000-01-01"
+            dateOfBirth: "2000-01-01",
+            managerRef: 135
         },
         {
             id: 3,
@@ -155,7 +157,8 @@ export default {
             surname: 'Bezos',
             department: 'Sales',
             salary: 3000,
-            dateOfBirth: "2000-01-01"
+            dateOfBirth: "2000-01-01",
+            managerRef: 135
         },
         {
             id: 4,
@@ -163,7 +166,8 @@ export default {
             surname: 'Gates',
             department: 'Finances',
             salary: 3000,
-            dateOfBirth: "2000-01-01"
+            dateOfBirth: "2000-01-01",
+            managerRef: 135
         }
     ]
 }
