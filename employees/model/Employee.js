@@ -12,18 +12,15 @@ export class Employee extends Person {
     }
 
     bonus() {
-        return new Promise(resolve => {
-            setTimeout(
-                () => resolve(Math.round(Math.random() * 1000)),
-                1000
-            )
-        })
+        let bonus = Math.round(Math.random() * 1000)
+        return new Promise((resolve, reject) =>
+            setTimeout(() => bonus < 700 ? resolve(bonus) : reject(bonus), 1000))
     }
 
-    total() {
-        return new Promise(resolve =>
-            this.bonus().then(bonus =>
-                resolve(bonus + this.salary)))
+    async total() {
+        await this.bonus().then(bonus =>
+            resolve(bonus + this.salary)
+        )
     }
 }
 
