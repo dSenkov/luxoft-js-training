@@ -1,9 +1,11 @@
-import {getEmployees, addEmployee, removeEmployee, searchEmployees, setEmployeeManager} from "./service"
+import {getEmployees, removeEmployee} from "./service"
 import {jsonToEmployees} from "./model/Employee";
+import * as server from './server'
 
-export function runUI() {
-    showEmployees(getEmployees())
-    fillSelect(document.getElementById('managerSelect'), getEmployeesOptions())
+export async function runUI() {
+    showEmployees(await server.getEmployees())
+    const employeesOptions = await getEmployeesOptions()
+    fillSelect(document.getElementById('managerSelect'), employeesOptions)
     //fillSelect(document.getElementById('managerSearch'), getEmployeesOptions())
     assignSendOnEnter('searchPane', 'searchEmployeesButton')
     assignSendOnEnter('addPane', 'addEmployeeButton')
@@ -12,7 +14,8 @@ export function runUI() {
 
 async function showEmployees(employeesJSON) {
     let employees = jsonToEmployees(employeesJSON)
-    const html = showEmployeesView(getEmployees(), employees)
+    let allEmployees = await server.getEmployees()
+    const html = showEmployeesView(allEmployees, employees)
     //showTotalIncomeSync(employees, html)
     await showTotalIncomeAsync(employees, html)
 }
@@ -52,7 +55,7 @@ function showEmployeesView(allEmployees, employees) {
     let li_items = employees.map(e =>
         `<li>${e} 
             <button onclick="removeEmployeeUI(${e.id})">X</button>
-            ${employeeManagerView(allEmployees, e.managerRef)}
+            ${employeeManagerView(allEmployees, e.managerId)}
          </li>`)
         .join('')
     return `<ul>${li_items}</ul>`
@@ -103,7 +106,7 @@ export function selectView(values) {
 //     document.getElementById(PLACEHOLDER).appendChild(ul)
 // }
 
-export function addEmployeeUI() {
+export async function addEmployeeUI() {
     let errorHTML = ''
     const name = document.getElementById('name').value
     if (name === '') {
@@ -120,26 +123,27 @@ export function addEmployeeUI() {
         errorHTML += '- Employee date of birth should be set<br>'
         document.getElementById('dateOfBirth').style.backgroundColor = '#FFEEEE'
     }
-    const id = addEmployee(name, surname)
-    if (id != null) {
+    // const id = addEmployee(name, surname)
+    let employee = await server.addEmployee(name, surname)
+    if (employee != null) {
         const managerId = document.getElementById('managerSelect').value
-        setEmployeeManager(id, managerId)
+        await server.setEmployeeManager(employee.id, managerId)
     }
     console.log('Error: ' + errorHTML)
     document.getElementById('addEmployeeFormErrorMessage').innerHTML = errorHTML
 
     if (errorHTML.length !== 0) return
 
-    showEmployees(getEmployees())
+    showEmployees(await server.getEmployees())
 
     document.getElementById('name').value = ''
     document.getElementById('surname').value = ''
     document.getElementById('dateOfBirth').value = ''
 }
 
-export function removeEmployeeUI(id) {
-    removeEmployee(id)
-    showEmployees(getEmployees())
+export async function removeEmployeeUI(id) {
+    await server.removeEmployee(id)
+    showEmployees(await server.getEmployees())
 }
 
 function fillSelect(select, values, selectedValue) {
@@ -152,21 +156,20 @@ function fillSelect(select, values, selectedValue) {
     }
 }
 
-function getEmployeesOptions() {
-    let options = []
-    for (let e of getEmployees()) {
-        options.push({text: e.name + ' ' + e.surname, value: e.id})
-    }
-    return options
+async function getEmployeesOptions() {
+    let employees = await server.getEmployees()
+    return employees.map(e => {
+        return {text: e.name + ' ' + e.surname, value: e.id}
+    })
 }
 
-export function searchEmployeeUI() {
-    const name = document.getElementById('nameSearch').value
-    const surname = document.getElementById('surnameSearch').value
-    const managerRef = document.getElementById('managerSearch').value
+export async function searchEmployeeUI() {
+    const name = document.getElementById('nameSearch').value || null
+    const surname = document.getElementById('surnameSearch').value || null
+    const managerId = document.getElementById('managerSearch').value || null
 
-    const employees = searchEmployees(name, surname, managerRef)
-    showEmployees(employees)
+    const example = {name, surname, managerId}
+    showEmployees(await server.findByExample(example))
 }
 
 export function openTab(event, id) {
