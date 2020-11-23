@@ -19,6 +19,10 @@ function getEmployeeJSON(id) {
     return JSON.stringify(findById(id))
 }
 
+export function getEmployees() {
+    return DATA.employees
+}
+
 function testEmployee() {
     addPhone(1, '555-55-55')
     addPhone(1, '666-66-66')

@@ -1,16 +1,51 @@
-import {addEmployee, removeEmployee, searchEmployees, setEmployeeManager} from "./service"
-import DATA from "./employees-json";
+import {getEmployees, addEmployee, removeEmployee, searchEmployees, setEmployeeManager} from "./service"
 import {jsonToEmployees} from "./model/Employee";
 
-const PLACEHOLDER = 'employeesPlaceholder'
-
-function clearEmployeesPlaceholder() {
-    document.getElementById(PLACEHOLDER).innerHTML = ''
+export function runUI() {
+    showEmployees(getEmployees())
+    fillSelect(document.getElementById('managerSelect'), getEmployeesOptions())
+    //fillSelect(document.getElementById('managerSearch'), getEmployeesOptions())
+    assignSendOnEnter('searchPane', 'searchEmployeesButton')
+    assignSendOnEnter('addPane', 'addEmployeeButton')
+    document.getElementById('searchButton').click()
 }
 
-function showEmployees(employeesJSON) {
+async function showEmployees(employeesJSON) {
     let employees = jsonToEmployees(employeesJSON)
-    document.getElementById(PLACEHOLDER).innerHTML = showEmployeesView(DATA.employees, employees)
+    const html = showEmployeesView(getEmployees(), employees)
+    //showTotalIncomeSync(employees, html)
+    await showTotalIncomeAsync(employees, html)
+}
+
+function showTotalIncomeSync(employees, html) {
+    html += '<br><u>Synchronous version:</u><br><br>'
+    for (let e of employees) {
+        e.total()
+            .then(total => {
+                html += `${e.name} total: ${total}<br>`
+                render(html)
+                console.log(total)
+            })
+            .catch(bonus => {
+                html += `${e.name} bonus is too big (${bonus}!)<br>`
+                render(html)
+                console.log(bonus)
+            })
+        render(html)
+    }
+}
+
+async function showTotalIncomeAsync(employees, html) {
+    html += '<br><u>Async/await version:</u><br><br>'
+    for (let e of employees) {
+        try {
+            let bonus = await e.bonus()
+            html += `${e.name} bonus: ${bonus} total: ${e.salary + bonus}<br>`
+        } catch (err) {
+            html += `${e.name} bonus is too big!<br>`
+        }
+        render(html)
+    }
 }
 
 function showEmployeesView(allEmployees, employees) {
@@ -68,15 +103,6 @@ export function selectView(values) {
 //     document.getElementById(PLACEHOLDER).appendChild(ul)
 // }
 
-export function runUI() {
-    showEmployees(DATA.employees)
-    fillSelect(document.getElementById('managerSelect'), getEmployeesOptions())
-    //fillSelect(document.getElementById('managerSearch'), getEmployeesOptions())
-    assignSendOnEnter('searchPane', 'searchEmployeesButton')
-    assignSendOnEnter('addPane', 'addEmployeeButton')
-    document.getElementById('searchButton').click()
-}
-
 export function addEmployeeUI() {
     let errorHTML = ''
     const name = document.getElementById('name').value
@@ -104,7 +130,7 @@ export function addEmployeeUI() {
 
     if (errorHTML.length !== 0) return
 
-    showEmployees(DATA.employees)
+    showEmployees(getEmployees())
 
     document.getElementById('name').value = ''
     document.getElementById('surname').value = ''
@@ -113,7 +139,7 @@ export function addEmployeeUI() {
 
 export function removeEmployeeUI(id) {
     removeEmployee(id)
-    showEmployees(DATA.employees)
+    showEmployees(getEmployees())
 }
 
 function fillSelect(select, values, selectedValue) {
@@ -128,7 +154,7 @@ function fillSelect(select, values, selectedValue) {
 
 function getEmployeesOptions() {
     let options = []
-    for (let e of DATA.employees) {
+    for (let e of getEmployees()) {
         options.push({text: e.name + ' ' + e.surname, value: e.id})
     }
     return options
@@ -171,4 +197,12 @@ function assignSendOnEnter(paneId, buttonId) {
             }
         })
     }
+}
+
+function render(html) {
+    document.getElementById('employeesPlaceholder').innerHTML = html;
+}
+
+function clearEmployeesPlaceholder() {
+    render('')
 }

@@ -18,30 +18,4 @@ window.allEmployees = function () {
     return jsonToEmployees(DATA.employees)
 }
 
-function render() {
-    document.getElementById('employees').innerHTML = html
-}
-
-let employees = jsonToEmployees(DATA.employees)
-for (let e of employees) {
-    e.total()
-        .then(total => html += `$(e.name} total: ${total} <br>`)
-        .catch(bonus => html += `${e.name} bonus is too big (${bonus}!) <br>`)
-        .then(render)
-}
-
-
-async function printBonus() {
-    html += '<br>Async/await version:<br>'
-    for (let e of employees) {
-        let bonus = await e.bonus()
-        html += `${e.name} bonus: ${bonus}
-            total: ${e.salary + bonus}<br>`
-        render()
-    }
-}
-
-printBonus()
-
 window.addEventListener('load', runUI)
-render()

@@ -18,8 +18,8 @@ export class Employee extends Person {
     }
 
     async total() {
-        await this.bonus()
-            .then(bonus => resolve(bonus + this.salary))
+        let bonus = await this.bonus()
+        return await (bonus + this.salary)
     }
 }
 
