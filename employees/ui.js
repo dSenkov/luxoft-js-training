@@ -1,4 +1,3 @@
-import {getEmployees, removeEmployee} from "./service"
 import {jsonToEmployees} from "./model/Employee";
 import * as server from './server'
 
